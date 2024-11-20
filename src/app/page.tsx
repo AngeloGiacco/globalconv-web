@@ -1,12 +1,13 @@
 "use client"
 import React , {useEffect} from 'react';
-import { Bot, Languages, Menu, X, Sparkles, ArrowRight, Sun, Moon, Globe, Zap } from 'lucide-react';
+import { ArrowRight, Sun, Moon} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Code2, Globe2 } from 'lucide-react';
+import WebDemo from '@/components/WebDemo';
+import CliDemo from '@/components/CliDemo';
+
 
 export default function Home() {
   const [mounted, setMounted] = React.useState(false);
@@ -85,28 +86,6 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  const codeExample = `# convai/customer-service/agent.yml
-name: "Customer Service"
-system_prompt: "You are a helpful customer service agent..."
-first_message: "Hi! How can I help you today?"
-languages: ["es", "fr", "de", "it", "ja"]
-tools:
-  - name: check_order
-    description: "Check order status"
-    # ...
-
-# Usage in React:
-import { ConvAI } from '@conversational/react'
-
-function App() {
-  return (
-    <ConvAI 
-      agent="customer-service" 
-      locale="es" 
-    />
-  )
-}`;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white to-blue-50/30">
       {/* Navbar */}
@@ -148,14 +127,10 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-6 pt-32 lg:pt-40 pb-24 relative">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.05),transparent_40%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,rgba(37,99,235,0.02),transparent_30%)]" />
-        </div>
+      <section className="container mx-auto px-6 lg:pt-40 pb-24 relative">
         
         <div className="max-w-[85rem] mx-auto">
-          <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
+          <div className="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-start">
             <div className="lg:col-span-4">
               <Badge variant="secondary" className="inline-flex items-center rounded-full px-4 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 mb-6 select-none">
                 <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse mr-2" />
@@ -192,64 +167,28 @@ function App() {
               </div>
             </div>
 
-            <div className="lg:col-span-3 relative">
+            <div className="lg:col-span-3 relative lg:sticky lg:top-24">
               <Tabs defaultValue="web" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
                   <TabsTrigger value="web" className="flex items-center gap-2">
                     <Globe2 className="h-4 w-4" />
-                    Web Interface
+                    Web
                   </TabsTrigger>
                   <TabsTrigger value="dev" className="flex items-center gap-2">
                     <Code2 className="h-4 w-4" />
-                    Developer CLI
+                    CLI
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="web" className="border rounded-lg p-4 bg-white/80 backdrop-blur">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">System Prompt</label>
-                      <textarea 
-                        className="w-full p-2 border rounded-md h-24"
-                        defaultValue="You are a helpful customer service agent..."
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">First Message</label>
-                      <input 
-                        type="text"
-                        className="w-full p-2 border rounded-md"
-                        defaultValue="Hi! How can I help you today?"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Target Languages</label>
-                      <div className="flex flex-wrap gap-2">
-                        {["🇪🇸 ES", "🇫🇷 FR", "🇩🇪 DE", "🇮🇹 IT", "🇯🇵 JA"].map((lang) => (
-                          <Badge key={lang} variant="secondary">{lang}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
+                <div className="relative h-[600px]">
+                  <TabsContent value="web" className="absolute inset-0 border rounded-lg bg-white/80 backdrop-blur">
+                    <WebDemo />
+                  </TabsContent>
 
-                <TabsContent value="dev" className="border rounded-lg p-4 bg-white/80 backdrop-blur">
-                  <div className="space-y-4">
-                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-                      <code>{codeExample}</code>
-                    </pre>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="font-mono bg-gray-100 px-2 py-1 rounded">$ convAI sync</span>
-                        <span className="text-gray-600">→ Sync changes across all languages</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="font-mono bg-gray-100 px-2 py-1 rounded">$ convAI deploy</span>
-                        <span className="text-gray-600">→ Deploy agents to production</span>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
+                  <TabsContent value="dev" className="absolute inset-0 border rounded-lg bg-white/80 backdrop-blur">
+                    <CliDemo />
+                  </TabsContent>
+                </div>
               </Tabs>
             </div>
           </div>
@@ -275,13 +214,6 @@ function App() {
       {/* Features Section */}
       <section className="container mx-auto px-4 py-4 bg-gradient-to-b from-white to-blue-50/30">
         <div id="demo-cal-inline" className="w-full rounded-lg overflow-hidden" />
-      </section>
-
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-24">
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-12 text-center relative overflow-hidden">
-          {/* CTA content */}
-        </div>
       </section>
     </div>
   );
