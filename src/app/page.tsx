@@ -7,11 +7,11 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Code2, Globe2 } from 'lucide-react';
 import WebDemo from '@/components/WebDemo';
 import CliDemo from '@/components/CliDemo';
+import Link from 'next/link';
 
 
 export default function Home() {
   const [mounted, setMounted] = React.useState(false);
-  const [isOpen, setIsOpen] = React.useState(false);
 
   useEffect(() => {
     (function (C, A, L) {
@@ -86,28 +86,30 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  const scrollToCalendar = () => {
+    const calendarElement = document.getElementById('demo-cal-inline');
+    if (calendarElement) {
+      calendarElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white to-blue-50/30">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-gray-100/50 supports-[backdrop-filter]:bg-white/50">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
-            <div className="ml-10 flex items-center space-x-3">
-              <span className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-700">
-                Conversational
-              </span>
+            <div className="ml-14 flex items-center space-x-3">
+              <img src="/logo.png" alt="Conversational Logo" className="h-16 w-auto" />
             </div>
             
             <div className="flex items-center space-x-8">
               <div className="hidden md:flex items-center space-x-1">
                 <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  How it Works
+                  <Link href="pricing">Pricing</Link>
                 </Button>
                 <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  Pricing
-                </Button>
-                <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  Docs
+                  <Link href="docs">Docs</Link>
                 </Button>
                 <Button
                   variant="ghost"
@@ -118,7 +120,7 @@ export default function Home() {
                   <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 </Button>
                 <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm hover:shadow transition-all rounded-full px-6">
-                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                  Login <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -134,10 +136,10 @@ export default function Home() {
             <div className="lg:col-span-4">
               <Badge variant="secondary" className="inline-flex items-center rounded-full px-4 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 mb-6 select-none">
                 <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse mr-2" />
-                YC W24
+                 Now live
               </Badge>
 
-              <h1 className="block font-semibold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight">
+              <h1 className="block font-semibold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight mt-2">
                 Effortlessly deploy and manage conversational AI agents in
                 <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
                   30+ languages
@@ -146,21 +148,16 @@ export default function Home() {
 
               <div className="mt-8 space-y-5 lg:space-y-6">
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Scale globally with AI agents embedded in your website that speak your customers' language while you manage everything in your native language.
+                  Scale globally with AI agents embedded in your website. Work in your language, serve your customers in theirs.
                 </p>
               </div>
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg hover:shadow-blue-200/50 rounded-full px-8"
-                >
-                  Try Free <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
                 <Button
                   size="lg"
                   variant="outline"
                   className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full px-8"
+                  onClick={scrollToCalendar}
                 >
                   Book Demo
                 </Button>
@@ -168,7 +165,7 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-3 relative lg:sticky lg:top-24">
-              <Tabs defaultValue="web" className="w-full">
+              <Tabs defaultValue="web" className="w-full mt-3">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
                   <TabsTrigger value="web" className="flex items-center gap-2">
                     <Globe2 className="h-4 w-4" />
@@ -181,11 +178,11 @@ export default function Home() {
                 </TabsList>
 
                 <div className="relative h-[600px]">
-                  <TabsContent value="web" className="absolute inset-0 border rounded-lg bg-white/80 backdrop-blur">
+                  <TabsContent value="web" className="absolute inset-0 rounded-lg bg-white/80 backdrop-blur">
                     <WebDemo />
                   </TabsContent>
 
-                  <TabsContent value="dev" className="absolute inset-0 border rounded-lg bg-white/80 backdrop-blur">
+                  <TabsContent value="dev" className="absolute inset-0 rounded-lg bg-white/80 backdrop-blur">
                     <CliDemo />
                   </TabsContent>
                 </div>

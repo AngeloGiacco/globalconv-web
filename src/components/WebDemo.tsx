@@ -1,9 +1,46 @@
 import React, { useState } from 'react';
 import { Bot, Languages } from 'lucide-react';
 import { supportedLanguages } from '../lib/supportedLanguages';
+import { Button } from "@/components/ui/button";
+import { Plus, Settings2 } from "lucide-react";
 
 export default function WebDemo() {
   const [selectedLanguage, setSelectedLanguage] = useState(supportedLanguages[0]);
+  const [activeTab, setActiveTab] = useState<'create' | 'manage'>('create');
+
+  const softwareFirstMessage: { [key: string]: string } = {
+    'en-US': "Hello! I'm your virtual sales agent for our software solutions. How can I assist you in finding the right tools for your needs today?",
+    'en': "Hello! I'm your virtual sales agent for our software solutions. How can I assist you in finding the right tools for your needs today?",
+    'fr': "Bonjour ! Je suis votre agent commercial virtuel pour nos solutions logicielles. Comment puis-je vous aider à trouver les bons outils pour vos besoins aujourd'hui ?",
+    'de': "Hallo! Ich bin Ihr virtueller Vertriebsagent für unsere Softwarelösungen. Wie kann ich Ihnen heute helfen, die richtigen Werkzeuge für Ihre Bedürfnisse zu finden?",
+    'de-CH': "Grüezi! Ich bin Ihr virtueller Vertriebsagent für unsere Softwarelösungen. Wie kann ich Ihnen heute helfen, die richtigen Werkzeuge für Ihre Bedürfnisse zu finden?",
+    'de-AT': "Hallo! Ich bin Ihr virtueller Vertriebsagent für unsere Softwarelösungen. Wie kann ich Ihnen heute helfen, die richtigen Werkzeuge für Ihre Bedürfnisse zu finden?",
+    'hi': "नमस्ते! मैं आपके लिए हमारे सॉफ़्टवेयर समाधानों का वर्चुअल बिक्री एजेंट हूँ। आज आपकी आवश्यकताओं के लिए सही उपकरण खोजने में मैं आपकी कैसे मदद कर सकता हूँ?",
+    'ar': "مرحبًا! أنا وكيل المبيعات الافتراضي لحلول البرمجيات لدينا. كيف يمكنني مساعدتك في العثور على الأدوات المناسبة لاحتياجاتك اليوم؟",
+    'cs': "Ahoj! Jsem váš virtuální prodejní agent pro naše softwarová řešení. Jak vám mohu pomoci najít správné nástroje pro vaše potřeby dnes?",
+    'es': "¡Hola! Soy tu agente de ventas virtual para nuestras soluciones de software. ¿Cómo puedo ayudarte a encontrar las herramientas adecuadas para tus necesidades hoy?",
+    'it': "Ciao! Sono il tuo agente di vendita virtuale per le nostre soluzioni software. Come posso aiutarti a trovare gli strumenti giusti per le tue esigenze oggi?",
+    'zh': "你好！我是您虚拟的软件解决方案销售代理。今天我能如何帮助您找到合适的工具？",
+    'ko': "안녕하세요! 저는 귀하의 소프트웨어 솔루션을 위한 가상 영업 대리인입니다. 오늘 귀하의 필요에 맞는 적절한 도구를 찾는 데 어떻게 도와드릴까요?",
+    'nl': "Hallo! Ik ben uw virtuele verkoopagent voor onze softwareoplossingen. Hoe kan ik u vandaag helpen de juiste tools voor uw behoeften te vinden?",
+    'tr': "Merhaba! Yazılım çözümlerimiz için sanal satış temsilcinizim. Bugün ihtiyaçlarınız için doğru araçları bulmanıza nasıl yardımcı olabilirim?",
+    'sv': "Hej! Jag är din virtuella försäljningsagent för våra mjukvarulösningar. Hur kan jag hjälpa dig att hitta rätt verktyg för dina behov idag?",
+    'id': "Halo! Saya adalah agen penjualan virtual Anda untuk solusi perangkat lunak kami. Bagaimana saya dapat membantu Anda menemukan alat yang tepat untuk kebutuhan Anda hari ini?",
+    'fil': "Kumusta! Ako ang iyong virtual na sales agent para sa aming mga solusyon sa software. Paano kita matutulungan sa paghahanap ng tamang mga tool para sa iyong mga pangangailangan ngayon?",
+    'ja': "こんにちは！私はあなたのためのソフトウェアソリューションの仮想営業エージェントです。今日はどのようにしてあなたのニーズに合ったツールを見つけるお手伝いができますか？",
+    'uk': "Привіт! Я ваш віртуальний агент з продажу наших програмних рішень. Як я можу допомогти вам знайти потрібні інструменти для ваших потреб сьогодні?",
+    'el': "Γεια σας! Είμαι ο εικονικός σας πωλητής για τις λύσεις λογισμικού μας. Πώς μπορώ να σας βοηθήσω να βρείτε τα κατάλληλα εργαλεία για τις ανάγκες σας σήμερα;",
+    'sk': "Ahoj! Som váš virtuálny obchodný agent pre naše softvérové riešenia. Ako vám môžem pomôcť nájsť správne nástroje pre vaše potreby dnes?",
+    'fi': "Hei! Olen virtuaalinen myyntiedustajasi ohjelmistoratkaisuillemme. Kuinka voin auttaa sinua löytämään oikeat työkalut tarpeisiisi tänään?",
+    'ro': "Bună! Sunt agentul tău virtual de vânzări pentru soluțiile noastre software. Cum te pot ajuta să găsești instrumentele potrivite pentru nevoile tale astăzi?",
+    'da': "Hej! Jeg er din virtuelle salgsagent for vores softwareløsninger. Hvordan kan jeg hjælpe dig med at finde de rigtige værktøjer til dine behov i dag?",
+    'bg': "Здравейте! Аз съм вашият виртуален търговски агент за нашите софтуерни решения. Как мога да ви помогна да намерите правилните инструменти за вашите нужди днес?",
+    'ms': "Hai! Saya adalah ejen jualan maya anda untuk penyelesaian perisian kami. Bagaimana saya boleh membantu anda mencari alat yang sesuai untuk keperluan anda hari ini?",
+    'hr': "Bok! Ja sam vaš virtualni prodajni agent za naša softverska rješenja. Kako vam mogu pomoći pronaći prave alate za vaše potrebe danas?",
+    'ta': "வணக்கம்! நாங்கள் வழங்கும் மென்பொருள் தீர்வுகளுக்கான உங்கள் மெய்நிகர் விற்பனை முகவர் நான். இன்று உங்கள் தேவைகளுக்கேற்ப சரியான கருவிகளை கண்டுபிடிக்க நான் எப்படி உதவ முடியும்?",
+    'pt': "Olá! Sou o seu agente de vendas virtual para as nossas soluções de software. Como posso ajudá-lo a encontrar as ferramentas certas para as suas necessidades hoje?",
+    'pl': "Cześć! Jestem twoim wirtualnym agentem sprzedaży dla naszych rozwiązań programowych. Jak mogę pomóc ci znaleźć odpowiednie narzędzia dla twoich potrzeb dzisiaj?",
+  };
 
   const firstMessages: { [key: string]: string } = {
     'en-US': 'Hey! Welcome to our store, how can I help you today?',
@@ -68,7 +105,7 @@ export default function WebDemo() {
     'bg': "Здравейте! Добре дошли в нашия магазин, днес имаме 10% отстъпка на всичко! Как мога да ви помогна?",
     'ms': "Hey! Selamat datang ke kedai kami, kami sedang mengadakan diskaun 10% untuk semua produk hari ini! Bagaimana saya boleh membantu anda?",
     'hr': "Hej! Dobrodošli u našu trgovinu, danas imamo 10% popusta na sve! Kako vam mogu pomoći?",
-    'ta': "ஹே! எங்கள் கடைக்கு வரவேற்கிறோம், இன்று எங்கள் அனைத்து பொருட்களுக்கும் 10% தள்ளுபடி உள்ளது! இன்று நான் உங்களை எப்படி உதவ முடியும்?",
+    'ta': "ஹே! எங்கள் கடைக்கு வரவேற்கிறோம், இன்று எங்கள் அனைத்து ொருட்களுக்கும் 10% தள்ளுபடி உள்ளது! இன்று நான் உங்களை எப்படி உதவ முடியும்?",
     'pt': "Ei! Bem-vindo à nossa loja, hoje temos 10% de desconto em todo o site! Como posso ajudá-lo?",
     'pl': "Hej! Witamy w naszym sklepie, dziś mamy 10% zniżki na wszystko! Jak mogę Ci pomóc?",
   };
@@ -80,55 +117,119 @@ export default function WebDemo() {
           <div className="p-2 bg-primary/10 rounded-lg">
             <Bot className="h-5 w-5 text-primary" />
           </div>
-          <span className="text-white font-semibold text-lg">Sales Agent</span>
-        </div>
-        <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-full">
-          <Languages className="h-3.5 w-3.5 text-primary/70" />
-          <span className="text-sm text-gray-300">Managing in English</span>
+          <span className="text-white font-semibold text-lg">Sales Agent Demo</span>
         </div>
       </div>
 
-      <div className="space-y-6">
-        <div className="bg-gray-800/70 rounded-xl p-4 border border-gray-700/50">
-          <div className="text-sm font-medium text-gray-400 mb-2">Command</div>
-          <div className="text-white text-lg font-medium">
-            Update the sales agent so that it knows about the 10% off site-wide deal
-          </div>
-        </div>
+      <div className="flex space-x-3 mb-4">
+        <Button
+          onClick={() => setActiveTab('create')}
+          variant={activeTab === 'create' ? 'default' : 'secondary'}
+          size="lg"
+          className="gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Create Agent
+        </Button>
+        <Button
+          onClick={() => setActiveTab('manage')}
+          variant={activeTab === 'manage' ? 'default' : 'secondary'}
+          size="lg"
+          className="gap-2"
+        >
+          <Settings2 className="h-4 w-4" />
+          Manage Agent
+        </Button>
+      </div>
 
-        <div className="flex flex-wrap gap-2.5 mb-2">
-          {supportedLanguages.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => setSelectedLanguage(lang)}
-              className={`w-8 h-6 flex items-center justify-center rounded-md transition-all duration-200 ${
-                selectedLanguage.code === lang.code 
-                  ? 'bg-primary/20 border-2 border-primary shadow-lg shadow-primary/20' 
-                  : 'border border-gray-700 hover:border-gray-600 hover:bg-gray-800/50'
-              }`}
-              title={lang.native_name}
-            >
-              <lang.icon className="w-5 h-5 object-contain" />
-            </button>
-          ))}
-        </div>
+      <div className="space-y-2">
+        {activeTab === 'create' ? (
+          <>
+            <div className="bg-gray-800/70 rounded-xl p-4 border border-gray-700/50">
+              <div className="text-sm font-medium text-gray-400 mb-2">Command</div>
+              <div className="text-white text-lg font-medium">
+                Create a sales agent for our software
+              </div>
+            </div>
 
-        <div className="bg-gray-800/30 rounded-xl p-2 border border-gray-800">
-          <div className="text-sm font-medium text-gray-400 mb-2">Response</div>
-          <div className="text-emerald-400 font-medium mb-2">
-            ✨ All agents' prompt updated to include site-wide deal
-          </div>
-          <div className="space-y-2 text-sm text-gray-400">
-            <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
-              <div className="text-gray-500 mb-1.5">Previous First Message:</div>
-              <div className="text-gray-300">"{firstMessages[selectedLanguage.locale]}"</div>
+            <div className="bg-gray-800/30 rounded-xl p-2 border border-gray-800">
+              <div className="text-sm font-medium text-gray-400 mb-2">Response</div>
+              <div className="text-emerald-400 font-medium mb-2">
+                ✨ Sales agent created with specialized software sales knowledge
+              </div>
+              
+              <div className="flex flex-wrap gap-2.5 mt-4 mb-2">
+              {supportedLanguages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setSelectedLanguage(lang)}
+                  className={`w-8 h-6 flex items-center justify-center rounded-md transition-all duration-200 ${
+                    selectedLanguage.code === lang.code 
+                      ? 'bg-primary/20 border-2 border-primary shadow-lg shadow-primary/20' 
+                      : 'border border-gray-700 hover:border-gray-600 hover:bg-gray-800/50'
+                  }`}
+                  title={lang.native_name}
+                >
+                  <lang.icon className="w-5 h-5 object-contain" />
+                </button>
+              ))}
             </div>
-            <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
-              <div className="text-gray-500 mb-1.5">Updated First Message:</div>
-              <div className="text-primary-400">"{firstMessagesAfter[selectedLanguage.locale]}"</div>
+
+              <div className="space-y-2 text-sm text-gray-400">
+                <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
+                  <div className="text-gray-500 mb-1.5">First Message:</div>
+                  <div className="text-gray-300">"{softwareFirstMessage[selectedLanguage.locale]}"</div>
+                </div>
+                <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
+                  <div className="text-gray-500 mb-1.5">System Prompt:</div>
+                  <div className="text-gray-400 italic">[Long specialized prompt for software sales...]</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <>
+            <div className="bg-gray-800/70 rounded-xl p-4 border border-gray-700/50">
+              <div className="text-sm font-medium text-gray-400 mb-2">Command</div>
+              <div className="text-white text-lg font-medium">
+                Update the sales agent so that it knows about the 10% off site-wide deal
+              </div>
+            </div>
+
+            <div className="bg-gray-800/30 rounded-xl p-2 border border-gray-800">
+              <div className="text-sm font-medium text-gray-400 mb-2">Response</div>
+              <div className="text-emerald-400 font-medium mb-2">
+                ✨ All agents' prompt updated to include site-wide deal
+              </div>
+              <div className="flex flex-wrap gap-2.5 mt-4 mb-2">
+              {supportedLanguages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setSelectedLanguage(lang)}
+                  className={`w-8 h-6 flex items-center justify-center rounded-md transition-all duration-200 ${
+                    selectedLanguage.code === lang.code 
+                      ? 'bg-primary/20 border-2 border-primary shadow-lg shadow-primary/20' 
+                      : 'border border-gray-700 hover:border-gray-600 hover:bg-gray-800/50'
+                  }`}
+                  title={lang.native_name}
+                >
+                  <lang.icon className="w-5 h-5 object-contain" />
+                </button>
+              ))}
+            </div>
+              <div className="space-y-2 text-sm text-gray-400">
+                <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
+                  <div className="text-gray-500 mb-1.5">Previous First Message:</div>
+                  <div className="text-gray-400">"{firstMessages[selectedLanguage.locale]}"</div>
+                </div>
+                <div className="p-2 rounded-lg bg-gray-900/50 border border-gray-800">
+                  <div className="text-gray-500 mb-1.5">Updated First Message:</div>
+                  <div className="text-gray-300">"{firstMessagesAfter[selectedLanguage.locale]}"</div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
