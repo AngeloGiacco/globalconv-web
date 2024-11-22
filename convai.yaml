@@ -1,0 +1,34 @@
+locales:
+  - en-US
+  - en
+  - fr
+  - de
+  - de-CH
+  - de-AT
+  - hi
+  - cs
+  - es
+  - it
+  - zh
+  - ko
+  - nl
+  - tr
+  - sv
+  - id
+  - fil
+  - ja
+  - uk
+  - el
+  - sk
+  - fi
+  - ro
+  - da
+  - bg
+  - ms
+  - hr
+  - ar
+  - ta
+  - pt
+  - pl
+default_locale: en
+specification_locale: en
