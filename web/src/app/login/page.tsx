@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { ArrowRight, Sun, Moon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 

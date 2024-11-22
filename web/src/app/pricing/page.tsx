@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import Link from 'next/link';
 
 export default function PricingPage() {

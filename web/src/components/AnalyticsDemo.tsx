@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bot, BarChart3, Globe2, Target, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import { supportedLanguages } from '../lib/supportedLanguages';
 
 // Add interfaces for the props and data structures

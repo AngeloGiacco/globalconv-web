@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Bot } from 'lucide-react';
 import { supportedLanguages } from '../lib/supportedLanguages';
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import { Plus, Settings2 } from "lucide-react";
 
 export default function WebDemo() {

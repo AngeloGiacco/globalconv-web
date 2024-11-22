@@ -1,15 +1,15 @@
 "use client"
 import React , {useEffect} from 'react';
 import { ArrowRight, Sun, Moon, BarChart3 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { Code2, Globe2 } from 'lucide-react';
-import WebDemo from '@/components/WebDemo';
-import CliDemo from '@/components/CliDemo';
-import AnalyticsDemo from '@/components/AnalyticsDemo';
+import WebDemo from '../components/WebDemo';
+import CliDemo from '../components/CliDemo';
+import AnalyticsDemo from '../components/AnalyticsDemo';
 import Link from 'next/link';
-import { IntlConvAI } from '@/components/IntlConv';
+import { IntlConvAI } from '../components/IntlConv';
 
 
 export default function Home() {
