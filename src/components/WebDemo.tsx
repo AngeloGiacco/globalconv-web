@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, Languages } from 'lucide-react';
+import { Bot } from 'lucide-react';
 import { supportedLanguages } from '../lib/supportedLanguages';
 import { Button } from "@/components/ui/button";
 import { Plus, Settings2 } from "lucide-react";
@@ -117,7 +117,7 @@ export default function WebDemo() {
           <div className="p-2 bg-primary/10 rounded-lg">
             <Bot className="h-5 w-5 text-primary" />
           </div>
-          <span className="text-white font-semibold text-lg">Sales Agent Demo</span>
+          <span className="text-white font-semibold text-lg">Sales Agent</span>
         </div>
       </div>
 

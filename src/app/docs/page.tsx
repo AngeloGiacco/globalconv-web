@@ -14,9 +14,9 @@ export default function Docs() {
           </Badge>
 
           <h1 className="block font-semibold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight mt-2">
-            Documentation
+            Docs
             <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
-              Coming Soon
+              coming soon
             </span>
           </h1>
 
