@@ -1,8 +1,6 @@
 "use client"
 import React, { useEffect } from 'react';
-import { Sun, Moon } from 'lucide-react';
-import { Button } from '../../components/ui/button';
-import Link from 'next/link';
+import Nav from '../../components/Nav' 
 
 export default function PricingPage() {
     useEffect(() => {
@@ -77,36 +75,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white to-blue-50/30">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-gray-100/50 supports-[backdrop-filter]:bg-white/50">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-16">
-            <div className="ml-14 flex items-center space-x-3">
-              <Link href="/">
-                <img src="/logo.png" alt="Conversational Logo" className="h-16 w-auto" />
-              </Link>
-            </div>
-            
-            <div className="flex items-center space-x-8">
-              <div className="hidden md:flex items-center space-x-1">
-                <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  <Link href="pricing">Pricing</Link>
-                </Button>
-                <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  <Link href="docs">Docs</Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                >
-                  <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Nav />
 
       {/* Simplified Pricing Content */}
       <section className="container mx-auto px-6 pt-32 pb-24">
@@ -125,3 +94,4 @@ export default function PricingPage() {
     </div>
   );
 }
+

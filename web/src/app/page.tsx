@@ -1,6 +1,6 @@
 "use client"
 import React , {useEffect} from 'react';
-import { ArrowRight, Sun, Moon, BarChart3 } from 'lucide-react';
+import { Sun, Moon, BarChart3 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
@@ -10,6 +10,7 @@ import CliDemo from '../components/CliDemo';
 import AnalyticsDemo from '../components/AnalyticsDemo';
 import Link from 'next/link';
 import { IntlConvAI } from '../components/IntlConv';
+import Nav from '@/components/Nav'
 
 
 export default function Home() {
@@ -96,63 +97,34 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/5 to-blue-100/10">
-      {/* Updated Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-gray-100">
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center space-x-3">
-              <img src="/logo.png" alt="Conversational Logo" className="h-12 w-auto" />
-            </div>
-            
-            <div className="flex items-center space-x-8">
-              <div className="hidden md:flex items-center space-x-6">
-                <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  <Link href="pricing">Pricing</Link>
-                </Button>
-                <Button variant="ghost" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors rounded-full px-4">
-                  <Link href="docs">Documentation</Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
-                >
-                  <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                </Button>
-                <Link href="login"><Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg hover:shadow-xl transition-all rounded-full px-8">
-                  Login <ArrowRight className="ml-2 h-4 w-4" />
-                </Button></Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/5 to-blue-100/10 relative">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/2 -right-1/2 w-[1000px] h-[1000px] bg-gradient-to-br from-blue-100/40 to-transparent rounded-full mix-blend-multiply animate-drift" />
+        <div className="absolute -bottom-1/2 -left-1/2 w-[1000px] h-[1000px] bg-gradient-to-tr from-purple-100/40 to-transparent rounded-full mix-blend-multiply animate-drift-slow" />
+      </div>
 
-      {/* Enhanced Hero Section */}
-      <section className="container mx-auto px-6 pt-24 lg:pt-32 pb-16 relative">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#e0f2fe,_transparent_60%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_#dbeafe,_transparent_60%)]" />
-        </div>
-        
+      <Nav />
+
+      <section className="container mx-auto px-6 pt-32 lg:pt-40 pb-16 relative">
         <div className="max-w-[85rem] mx-auto">
           <div className="grid lg:grid-cols-7 lg:gap-x-12 xl:gap-x-16 lg:items-center">
-            <div className="lg:col-span-4 space-y-12">
+            <div className="lg:col-span-4 space-y-12 animate-fade-in">
               <div className="space-y-6">
-                <Badge variant="secondary" className="inline-flex items-center rounded-full px-5 py-1.5 text-sm font-medium bg-blue-50 text-blue-600 mb-6 select-none border border-blue-100">
-                  <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse mr-2" />
+                <Badge 
+                  variant="secondary" 
+                  className="inline-flex items-center rounded-full px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-50 to-blue-100/50 text-blue-600 mb-6 select-none border border-blue-100/50 backdrop-blur-sm transform hover:scale-105 transition-transform duration-300"
+                >
+                  <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse-slow mr-2" />
                   Now live
                 </Badge>
 
-                <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight">
+                <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight tracking-tight animate-fade-in-up">
                   Effortlessly deploy and manage conversational AI agents in
-                  <span className="relative">
-                    <span className="ml-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
+                  <span className="relative inline-block ml-2">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 animate-gradient">
                       30+ languages
                     </span>
-                    <span className="absolute -bottom-2 left-0 right-0 h-1 bg-blue-600/30 rounded-full blur-sm" />
+                    <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600/30 via-blue-700/30 to-blue-800/30 rounded-full blur-sm animate-pulse-slow" />
                   </span>
                 </h1>
 
@@ -161,10 +133,10 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                 <Button
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg hover:shadow-xl transition-all rounded-full px-8 py-6 text-lg"
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 text-lg transform hover:-translate-y-0.5"
                   onClick={scrollToCalendar}
                 >
                   Book Demo
@@ -172,15 +144,14 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full px-8 py-6 text-lg"
+                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50/50 rounded-full px-8 py-6 text-lg backdrop-blur-sm transform hover:-translate-y-0.5 transition-all duration-300"
                 >
                   View docs
                 </Button>
               </div>
             </div>
 
-            {/* Enhanced Demo Section */}
-            <div className="lg:col-span-3 relative lg:sticky lg:top-28">
+            <div className="lg:col-span-3 relative lg:sticky lg:top-28 animate-fade-in" style={{ animationDelay: '400ms' }}>
               <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-blue-100/50 via-white to-blue-50/50 rounded-2xl blur-3xl transform -rotate-6" />
               <Tabs defaultValue="web" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-4 p-1 bg-gray-100/80 backdrop-blur rounded-full h-[42px]">
@@ -215,7 +186,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Enhanced Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full mt-16">
             <div className="text-center">
               <div className="text-3xl font-bold text-gray-900">60 seconds</div>
@@ -242,3 +212,14 @@ export default function Home() {
     </div>
   );
 }
+
+const ThemeToggle = () => (
+  <Button
+    variant="ghost"
+    size="icon"
+    className="rounded-full hover:bg-gray-100/50 transition-colors duration-300"
+  >
+    <Sun className="h-5 w-5 rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0" />
+    <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all duration-300 dark:rotate-0 dark:scale-100" />
+  </Button>
+);
