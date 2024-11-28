@@ -1,6 +1,9 @@
+#!/usr/bin/env node
+
 import { Command } from 'commander';
-import { init } from './commands/init';
-import { sync } from './commands/sync';
+import { init } from './commands/init.js';
+import { sync } from './commands/sync.js';
+import { loadConfig, loadLockFile } from './utils/config.js';
 
 const program = new Command();
 
@@ -18,5 +21,15 @@ program
   .command('sync')
   .description('Sync agents with the server')
   .action(sync);
+
+program
+  .command('debug')
+  .description('Show current configuration and lock file state')
+  .action(() => {
+    console.log('Current Config:');
+    console.log(loadConfig());
+    console.log('\nLock File:');
+    console.log(loadLockFile());
+  });
 
 program.parse(process.argv);

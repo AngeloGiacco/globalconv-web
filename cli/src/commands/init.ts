@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import yaml from 'js-yaml';
 import chalk from 'chalk';
-import { saveConfig } from '../utils/config';
 
 export function init() {
   const configPath = path.resolve(process.cwd(), 'convai.yaml');

@@ -1,4 +1,4 @@
-import { loadConfig, loadLockFile, saveLockFile, generateConfigHash } from '../utils/config';
+import { loadConfig, loadLockFile, saveLockFile, generateConfigHash } from '../utils/config.js';
 import chalk from 'chalk';
 import axios from 'axios';
 import path from 'path';
