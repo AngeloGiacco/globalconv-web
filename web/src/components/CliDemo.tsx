@@ -22,7 +22,7 @@ specification_locale: en
       code: `
 first_message: "Hey! How can I help?"
 sys_prompt: "You're a helpful assistant."
-llm_provider: gpt-4o
+llm_provider: "gpt-4o"
       `,
     },
     {
