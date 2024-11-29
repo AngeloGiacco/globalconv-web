@@ -10,16 +10,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface AgentConfig {
-  first_message: string;
-  sys_prompt: string;
-  llm_provider: string;
+  name: string;
+  firstMessage: string;
+  systemPrompt: string;
+  llmProvider: string;
 }
 
-interface LockFile {
-  version: string;
-  agents: {
-    [agentName: string]: string;
-  };
+interface ConvaiConfig {
+  locales: string[];
+  default_locale: string;
+  specification_locale: string;
+  agents: string;
 }
 
 // Retrieve API token from environment variables
@@ -30,66 +31,78 @@ if (!API_TOKEN) {
   process.exit(1);
 }
 
-// Create an Axios instance with default headers
-const apiClient = axios.create({
-  baseURL: 'https://api.convai.com',
-  headers: {
-    Authorization: `Bearer ${API_TOKEN}`,
-    'Content-Type': 'application/json',
-  },
-});
-
 export async function sync() {
   try {
     const config = loadConfig();
     console.log(chalk.blue('Loading configuration...'));
 
-    // Syncing main configuration
-    const configResponse = await apiClient.post('/sync/config', config);
-
-    if (configResponse.status === 200) {
-      console.log(chalk.green('Successfully synced main configuration.'));
-    } else {
-      console.log(chalk.red('Failed to sync main configuration.'));
+    // Look for convai.yaml in the root directory where the command is executed
+    const convaiConfigPath = path.resolve(process.cwd(), 'convai.yaml');
+    if (!fs.existsSync(convaiConfigPath)) {
+      console.error(chalk.red(`Error: Configuration file not found at ${convaiConfigPath}`));
+      process.exit(1);
     }
 
-    // Syncing agents
-    const agentsDir = path.resolve(process.cwd(), 'convai-agents');
+    const convaiConfigContent = fs.readFileSync(convaiConfigPath, 'utf8');
+    const convaiConfig = yaml.load(convaiConfigContent) as ConvaiConfig;
+
+    const agentsDir = path.resolve(process.cwd(), convaiConfig.agents);
     if (!fs.existsSync(agentsDir)) {
-      console.log(chalk.yellow('No convai-agents directory found.'));
+      console.log(chalk.yellow(`No agents directory found at ${agentsDir}.`));
       return;
     }
 
     const agentFiles = fs.readdirSync(agentsDir).filter(file => file.endsWith('.yaml'));
-    const lockFile: LockFile = loadLockFile();
-    const updatedLock: LockFile = { ...lockFile };
+    const lockFile = loadLockFile();
+    const currentAgents = agentFiles.map(file => path.basename(file, '.yaml'));
+    const lockedAgents = Object.keys(lockFile.agents);
 
-    for (const file of agentFiles) {
-      const agentName = path.basename(file, '.yaml');
-      const filePath = path.join(agentsDir, file);
+    const agentsToCreate = currentAgents.filter(agent => !lockedAgents.includes(agent));
+    const agentsToDelete = lockedAgents.filter(agent => !currentAgents.includes(agent));
+    const agentsToUpdate: string[] = [];
+
+    for (const agent of currentAgents) {
+      const filePath = path.join(agentsDir, `${agent}.yaml`);
       const agentConfig = yaml.load(fs.readFileSync(filePath, 'utf8')) as AgentConfig;
+      const storedHashes = lockFile.agents[agent];
 
-      const currentHash = generateConfigHash(agentConfig);
-      const storedHash = lockFile.agents[agentName];
+      const hasChanges = !storedHashes || 
+        generateConfigHash(agentConfig.firstMessage) !== storedHashes.firstMessage ||
+        generateConfigHash(agentConfig.systemPrompt) !== storedHashes.systemPrompt ||
+        generateConfigHash(agentConfig.llmProvider) !== storedHashes.llmProvider;
 
-      if (currentHash === storedHash) {
-        console.log(chalk.gray(`No changes detected for agent: ${agentName}. Skipping sync.`));
-        continue;
+      if (hasChanges) {
+        agentsToUpdate.push(agent);
       }
+    }
 
-      try {
-        const agentResponse = await apiClient.post(`/sync/agents/${agentName}`, agentConfig);
+    const changes = {
+      create: agentsToCreate,
+      update: agentsToUpdate,
+      delete: agentsToDelete,
+    };
 
-        if (agentResponse.status === 200) {
-          console.log(chalk.green(`Successfully synced agent: ${agentName}`));
-          // Update the hash after successful sync
-          updatedLock.agents[agentName] = currentHash;
-        } else {
-          console.log(chalk.red(`Failed to sync agent: ${agentName}`));
-        }
-      } catch (agentError) {
-        console.error(chalk.red(`Error syncing agent: ${agentName}`), agentError);
-      }
+    console.log(chalk.blue('Determined the following changes:'));
+    console.log(JSON.stringify(changes, null, 2));
+
+    // Optionally, you can handle the creation, update, and deletion here using API calls
+    // For example:
+    // await handleAgentChanges(changes, apiClient);
+
+    // Update the lock file with current hashes for each field
+    const updatedLock = { ...lockFile };
+    for (const agent of agentsToCreate.concat(agentsToUpdate)) {
+      const filePath = path.join(agentsDir, `${agent}.yaml`);
+      const agentConfig = yaml.load(fs.readFileSync(filePath, 'utf8')) as AgentConfig;
+      updatedLock.agents[agent] = {
+        firstMessage: generateConfigHash(agentConfig.firstMessage),
+        systemPrompt: generateConfigHash(agentConfig.systemPrompt),
+        llmProvider: generateConfigHash(agentConfig.llmProvider),
+      };
+    }
+
+    for (const agent of agentsToDelete) {
+      delete updatedLock.agents[agent];
     }
 
     // Save the updated lock file

@@ -1,0 +1,3 @@
+firstMessage: Hey! How can I help?
+systemPrompt: You're a helpful assistant.
+llmProvider: gpt-4

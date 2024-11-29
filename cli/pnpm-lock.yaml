@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@types/yaml':
+        specifier: ^1.9.7
+        version: 1.9.7
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -23,6 +26,9 @@ importers:
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
+      yaml:
+        specifier: ^2.6.1
+        version: 2.6.1
     devDependencies:
       '@types/dotenv':
         specifier: ^8.2.3
@@ -45,6 +51,10 @@ packages:
 
   '@types/node@22.10.1':
     resolution: {integrity: sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==}
+
+  '@types/yaml@1.9.7':
+    resolution: {integrity: sha512-8WMXRDD1D+wCohjfslHDgICd2JtMATZU8CkhH8LVJqcJs6dyYj5TGptzP8wApbmEullGBSsCEzzap73DQ1HJaA==}
+    deprecated: This is a stub types definition. yaml provides its own type definitions, so you do not need this installed.
 
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
@@ -125,6 +135,11 @@ packages:
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
+  yaml@2.6.1:
+    resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
 snapshots:
 
   '@types/dotenv@8.2.3':
@@ -136,6 +151,10 @@ snapshots:
   '@types/node@22.10.1':
     dependencies:
       undici-types: 6.20.0
+
+  '@types/yaml@1.9.7':
+    dependencies:
+      yaml: 2.6.1
 
   ansi-styles@4.3.0:
     dependencies:
@@ -201,3 +220,5 @@ snapshots:
       has-flag: 4.0.0
 
   undici-types@6.20.0: {}
+
+  yaml@2.6.1: {}

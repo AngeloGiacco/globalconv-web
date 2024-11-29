@@ -14,6 +14,7 @@ export function init() {
     locales: ['en'],
     default_locale: 'en',
     specification_locale: 'en',
+    agents: './convai-agents/'
   };
 
   fs.writeFileSync(configPath, yaml.dump(defaultConfig), 'utf8');

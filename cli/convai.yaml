@@ -2,3 +2,4 @@ locales:
   - en
 default_locale: en
 specification_locale: en
+agents: ./convai-agents/

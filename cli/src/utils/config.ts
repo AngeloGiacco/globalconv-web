@@ -2,45 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import chalk from 'chalk';
-import crypto from 'crypto';
-
-interface ConvAIConfig {
-  locales: string[];
-  default_locale: string;
-  specification_locale: string;
-}
-
-interface AgentConfig {
-  first_message: string;
-  sys_prompt: string;
-  llm_provider: string;
-}
-
-interface LockFile {
-  version: string;
-  agents: {
-    [agentName: string]: string;
-  };
-}
-
-const CONFIG_FILE = 'convai.yaml';
-const LOCK_FILE = '.convai/.convai.lock';
-const LOCK_VERSION = '1.0';
+import { ConvAIConfig, LockFile, CONSTANTS, DEFAULT_CONFIG } from '../types/index.js';
 
 /**
  * Load main configuration
  */
 export function loadConfig(): ConvAIConfig {
-  const configPath = path.resolve(process.cwd(), CONFIG_FILE);
+  const configPath = path.resolve(process.cwd(), CONSTANTS.CONFIG_FILE);
   if (!fs.existsSync(configPath)) {
-    console.log(chalk.yellow(`Config file ${CONFIG_FILE} not found. Creating a default one.`));
-    const defaultConfig: ConvAIConfig = {
-      locales: ['en'],
-      default_locale: 'en',
-      specification_locale: 'en',
-    };
-    fs.writeFileSync(configPath, yaml.dump(defaultConfig), 'utf8');
-    return defaultConfig;
+    console.log(chalk.yellow(`Config file ${CONSTANTS.CONFIG_FILE} not found. Creating a default one.`));
+    fs.writeFileSync(configPath, yaml.dump(DEFAULT_CONFIG), 'utf8');
+    return DEFAULT_CONFIG;
   }
 
   const fileContents = fs.readFileSync(configPath, 'utf8');
@@ -51,42 +23,48 @@ export function loadConfig(): ConvAIConfig {
  * Save main configuration
  */
 export function saveConfig(config: ConvAIConfig) {
-  const configPath = path.resolve(process.cwd(), CONFIG_FILE);
+  const configPath = path.resolve(process.cwd(), CONSTANTS.CONFIG_FILE);
   fs.writeFileSync(configPath, yaml.dump(config), 'utf8');
-  console.log(chalk.green(`Configuration saved to ${CONFIG_FILE}`));
+  console.log(chalk.green(`Configuration saved to ${CONSTANTS.CONFIG_FILE}`));
 }
 
 /**
  * Load lock file
  */
+export function getLockFilePath(): string {
+  return path.resolve(process.cwd(), CONSTANTS.LOCK_FILE);
+}
+
 export function loadLockFile(): LockFile {
-  const lockPath = path.resolve(process.cwd(), LOCK_FILE);
+  const lockPath = getLockFilePath();
   if (!fs.existsSync(lockPath)) {
-    return { version: LOCK_VERSION, agents: {} };
+    return {
+      version: CONSTANTS.LOCK_VERSION,
+      agents: {},
+    };
   }
-  const fileContents = fs.readFileSync(lockPath, 'utf8');
-  return JSON.parse(fileContents) as LockFile;
+  return JSON.parse(fs.readFileSync(lockPath, 'utf8'));
 }
 
 /**
  * Save lock file
  */
-export function saveLockFile(lock: LockFile) {
-  const lockDir = path.resolve(process.cwd(), '.convai');
-  if (!fs.existsSync(lockDir)) {
-    fs.mkdirSync(lockDir);
-  }
-  const lockPath = path.resolve(lockDir, '.convai.lock');
-  fs.writeFileSync(lockPath, JSON.stringify(lock, null, 2), 'utf8');
+export function saveLockFile(lockFile: LockFile): void {
+  const lockPath = getLockFilePath();
+  fs.writeFileSync(lockPath, JSON.stringify(lockFile, null, 2));
 }
 
 /**
  * Generate hash for an agent configuration
  */
-export function generateConfigHash(agentConfig: AgentConfig): string {
-  const hash = crypto.createHash('sha256');
-  // Concatenate relevant fields
-  const data = `${agentConfig.first_message}|${agentConfig.sys_prompt}|${agentConfig.llm_provider}`;
-  hash.update(data);
-  return hash.digest('hex');
+export function generateConfigHash(value: string): string {
+  // Using a simple but reliable hashing method that works for any string length
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    const char = value.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  // Convert to positive hex string with fixed length
+  return Math.abs(hash).toString(16).padStart(8, '0');
 }
