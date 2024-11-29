@@ -84,7 +84,7 @@ export default function PricingPage() {
             Let's talk 
           </h1>
           <p className="text-lg text-gray-700 mb-12">
-            We're still trying to figure out pricing! let's find something that works for both of us!
+            Honestly, we just launched so we're still trying to figure out pricing! let's find something that works for both of us!
           </p>
           
           {/* Calendar Section */}

@@ -25,6 +25,7 @@ const Nav: FC = () => (
             <img src="/logo.png" alt="Logo" className="h-8 cursor-pointer" />
           </Link>
           <div className="hidden md:flex items-center gap-6">
+            <NavLink href="/how-it-works">How it works</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
             <NavLink href="/docs">Docs</NavLink>
           </div>

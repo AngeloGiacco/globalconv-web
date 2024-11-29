@@ -10,6 +10,7 @@ import CliDemo from '../components/CliDemo';
 import AnalyticsDemo from '../components/AnalyticsDemo';
 import { IntlConvAI } from '../components/IntlConv';
 import Nav from '@/components/Nav'
+import { motion } from 'framer-motion';
 
 
 export default function Home() {
@@ -95,6 +96,20 @@ export default function Home() {
     }
   };
 
+  const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 }
+  };
+
+  const staggerContainer = {
+    animate: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/5 to-blue-100/10 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -104,20 +119,33 @@ export default function Home() {
 
       <Nav />
 
-      <section className="container mx-auto px-6 pt-32 lg:pt-40 pb-16 relative">
+      <motion.section 
+        initial="initial"
+        animate="animate"
+        variants={staggerContainer}
+        className="container mx-auto px-6 pt-32 lg:pt-40 pb-16 relative"
+      >
         <div className="max-w-[85rem] mx-auto">
           <div className="grid lg:grid-cols-7 lg:gap-x-12 xl:gap-x-16 lg:items-center">
-            <div className="lg:col-span-4 space-y-12 animate-fade-in">
-              <div className="space-y-6">
-                <Badge 
-                  variant="secondary" 
-                  className="inline-flex items-center rounded-full px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-50 to-blue-100/50 text-blue-600 mb-6 select-none border border-blue-100/50 backdrop-blur-sm transform hover:scale-105 transition-transform duration-300"
+            <motion.div 
+              className="lg:col-span-4 space-y-12"
+              variants={fadeInUp}
+            >
+              <motion.div 
+                className="space-y-6"
+                variants={fadeInUp}
+              >
+                  <Badge 
+                    variant="secondary" 
+                    className="inline-flex items-center rounded-full px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-blue-50 to-blue-100/50 text-blue-600 mb-6 select-none border border-blue-100/50 backdrop-blur-sm"
+                  >
+                    <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse-slow mr-2" />
+                    Now live
+                  </Badge>
+                <motion.h1 
+                  variants={fadeInUp}
+                  className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight tracking-tight"
                 >
-                  <span className="flex w-2 h-2 rounded-full bg-blue-600 animate-pulse-slow mr-2" />
-                  Now live
-                </Badge>
-
-                <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl lg:leading-tight tracking-tight animate-fade-in-up">
                   Effortlessly deploy and manage conversational AI agents in
                   <span className="relative inline-block ml-2">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 animate-gradient">
@@ -125,32 +153,54 @@ export default function Home() {
                     </span>
                     <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600/30 via-blue-700/30 to-blue-800/30 rounded-full blur-sm animate-pulse-slow" />
                   </span>
-                </h1>
+                </motion.h1>
 
-                <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                <motion.p 
+                  variants={fadeInUp}
+                  className="text-xl text-gray-600 leading-relaxed max-w-2xl"
+                >
                   Scale globally with AI agents embedded in your website. Work in your language, serve your customers in theirs.
-                </p>
-              </div>
+                </motion.p>
+              </motion.div>
 
-              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 text-lg transform hover:-translate-y-0.5"
-                  onClick={scrollToCalendar}
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4"
+                variants={fadeInUp}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Book Demo
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50/50 rounded-full px-8 py-6 text-lg backdrop-blur-sm transform hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  View docs
-                </Button>
-              </div>
-            </div>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 text-lg"
+                    onClick={scrollToCalendar}
+                  >
+                    Book Demo
+                  </Button>
+                </motion.div>
 
-            <div className="lg:col-span-3 relative lg:sticky lg:top-28 animate-fade-in" style={{ animationDelay: '400ms' }}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50/50 rounded-full px-8 py-6 text-lg backdrop-blur-sm"
+                  >
+                    View docs
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+
+            <motion.div 
+              className="lg:col-span-3 relative lg:sticky lg:top-28"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-blue-100/50 via-white to-blue-50/50 rounded-2xl blur-3xl transform -rotate-6" />
               <Tabs defaultValue="web" className="w-full">
                 <TabsList className="grid w-full grid-cols-3 mb-4 p-1 bg-gray-100/80 backdrop-blur rounded-full h-[42px]">
@@ -182,10 +232,15 @@ export default function Home() {
                   </TabsContent>
                 </div>
               </Tabs>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full mt-16">
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <div className="text-center">
               <div className="text-3xl font-bold text-gray-900">60 seconds</div>
               <div className="text-sm text-gray-600">Deploy new agents in all languages in &lt;1 minute</div>
@@ -198,16 +253,22 @@ export default function Home() {
               <div className="text-3xl font-bold text-gray-900">Fully customisable</div>
               <div className="text-sm text-gray-600">Add your knowledge base, tools etc</div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-12 bg-transparent">
-        <div id="demo-cal-inline" className="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-xl bg-white/95 backdrop-blur" />
-      </section>
-
-      <IntlConvAI orgKey='b72f0d77-57d0-4417-b998-62db58197b8e' locale='de' agentName='sales-agent' />
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="container mx-auto px-4 py-12 bg-transparent"
+      >
+        <div 
+          id="demo-cal-inline" 
+          className="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-xl bg-white/95 backdrop-blur p-4 border border-gray-100"
+        />
+      </motion.section>
     </div>
   );
 }
