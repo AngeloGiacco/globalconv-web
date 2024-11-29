@@ -12,13 +12,14 @@ export const add = async (name: string, options: AddOptions) => {
 
   const agentConfig: AgentConfig = {
     name,
-    firstMessage: options.firstMessage,
-    systemPrompt: options.systemPrompt,
-    llmProvider: options.llmProvider,
+    firstMessage: options.firstMessage || "Hey! How can I help?",
+    systemPrompt: options.systemPrompt || "You're a helpful assistant.",
+    llmProvider: options.llmProvider || "gemini-1.5-flash",
   };
 
+  const { name: _, ...agentConfigWithoutName } = agentConfig;
   const agentPath = join(agentsDir, `${name}.yaml`);
-  writeFileSync(agentPath, yaml.stringify(agentConfig));
+  writeFileSync(agentPath, yaml.stringify(agentConfigWithoutName));
 
   console.log(`✨ Created new agent: ${name}`);
   console.log(` Agent configuration saved to: ${agentPath}`);

@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "agents": {
+    "sales-agent": {
+      "firstMessage": "0000000003338b34",
+      "systemPrompt": "0000000007ddb1f8",
+      "llmProvider": "gpt-4o"
+    },
+    "cs-agent": {
+      "firstMessage": "0000000003338b34",
+      "systemPrompt": "0000000007ddb1f8",
+      "llmProvider": "gpt-4o"
+    }
+  }
+}

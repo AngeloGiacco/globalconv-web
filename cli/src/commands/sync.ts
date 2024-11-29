@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import dotenv from 'dotenv';
+import { VALID_LLM_PROVIDERS, LLMProvider } from '../types/index.js';
 
 // Load environment variables
 dotenv.config();
@@ -13,10 +14,10 @@ interface AgentConfig {
   name: string;
   firstMessage: string;
   systemPrompt: string;
-  llmProvider: string;
+  llmProvider: LLMProvider;
 }
 
-interface ConvaiConfig {
+interface ConvAIConfig {
   locales: string[];
   default_locale: string;
   specification_locale: string;
@@ -29,6 +30,18 @@ const API_TOKEN = process.env.CONVAI_API_TOKEN;
 if (!API_TOKEN) {
   console.error(chalk.red('Error: CONVAI_API_TOKEN is not defined in environment variables.'));
   process.exit(1);
+}
+
+interface FieldChanges {
+  firstMessage?: boolean;
+  systemPrompt?: boolean;
+  llmProvider?: boolean;
+}
+
+interface DetailedChanges {
+  create: string[];
+  update: Record<string, FieldChanges>;
+  delete: string[];
 }
 
 export async function sync() {
@@ -44,7 +57,7 @@ export async function sync() {
     }
 
     const convaiConfigContent = fs.readFileSync(convaiConfigPath, 'utf8');
-    const convaiConfig = yaml.load(convaiConfigContent) as ConvaiConfig;
+    const convaiConfig = yaml.load(convaiConfigContent) as ConvAIConfig;
 
     const agentsDir = path.resolve(process.cwd(), convaiConfig.agents);
     if (!fs.existsSync(agentsDir)) {
@@ -59,26 +72,49 @@ export async function sync() {
 
     const agentsToCreate = currentAgents.filter(agent => !lockedAgents.includes(agent));
     const agentsToDelete = lockedAgents.filter(agent => !currentAgents.includes(agent));
-    const agentsToUpdate: string[] = [];
+    const agentUpdates: Record<string, FieldChanges> = {};
 
     for (const agent of currentAgents) {
       const filePath = path.join(agentsDir, `${agent}.yaml`);
       const agentConfig = yaml.load(fs.readFileSync(filePath, 'utf8')) as AgentConfig;
+
+      // Validate LLM provider
+      if (!VALID_LLM_PROVIDERS.includes(agentConfig.llmProvider as LLMProvider)) {
+        console.error(chalk.red(
+          `Error: Invalid LLM provider "${agentConfig.llmProvider}" for agent "${agent}". ` +
+          `Valid providers are: ${VALID_LLM_PROVIDERS.join(', ')}`
+        ));
+        process.exit(1);
+      }
+
       const storedHashes = lockFile.agents[agent];
 
-      const hasChanges = !storedHashes || 
-        generateConfigHash(agentConfig.firstMessage) !== storedHashes.firstMessage ||
-        generateConfigHash(agentConfig.systemPrompt) !== storedHashes.systemPrompt ||
-        generateConfigHash(agentConfig.llmProvider) !== storedHashes.llmProvider;
+      if (storedHashes) {
+        const fieldChanges: FieldChanges = {};
+        let hasAnyChanges = false;
 
-      if (hasChanges) {
-        agentsToUpdate.push(agent);
+        if (generateConfigHash(agentConfig.firstMessage) !== storedHashes.firstMessage) {
+          fieldChanges.firstMessage = true;
+          hasAnyChanges = true;
+        }
+        if (generateConfigHash(agentConfig.systemPrompt) !== storedHashes.systemPrompt) {
+          fieldChanges.systemPrompt = true;
+          hasAnyChanges = true;
+        }
+        if (agentConfig.llmProvider !== storedHashes.llmProvider) {
+          fieldChanges.llmProvider = true;
+          hasAnyChanges = true;
+        }
+
+        if (hasAnyChanges) {
+          agentUpdates[agent] = fieldChanges;
+        }
       }
     }
 
-    const changes = {
+    const changes: DetailedChanges = {
       create: agentsToCreate,
-      update: agentsToUpdate,
+      update: agentUpdates,
       delete: agentsToDelete,
     };
 
@@ -91,13 +127,13 @@ export async function sync() {
 
     // Update the lock file with current hashes for each field
     const updatedLock = { ...lockFile };
-    for (const agent of agentsToCreate.concat(agentsToUpdate)) {
+    for (const agent of agentsToCreate.concat(Object.keys(agentUpdates))) {
       const filePath = path.join(agentsDir, `${agent}.yaml`);
       const agentConfig = yaml.load(fs.readFileSync(filePath, 'utf8')) as AgentConfig;
       updatedLock.agents[agent] = {
         firstMessage: generateConfigHash(agentConfig.firstMessage),
         systemPrompt: generateConfigHash(agentConfig.systemPrompt),
-        llmProvider: generateConfigHash(agentConfig.llmProvider),
+        llmProvider: agentConfig.llmProvider,
       };
     }
 

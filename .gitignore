@@ -42,3 +42,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore convai-agents folder
+cli/convai-agents/
+/cli/convai-agents

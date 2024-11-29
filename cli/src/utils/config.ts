@@ -3,6 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import chalk from 'chalk';
 import { ConvAIConfig, LockFile, CONSTANTS, DEFAULT_CONFIG } from '../types/index.js';
+import crypto from 'crypto';
 
 /**
  * Load main configuration
@@ -55,16 +56,8 @@ export function saveLockFile(lockFile: LockFile): void {
 }
 
 /**
- * Generate hash for an agent configuration
+ * Generate SHA-256 hash for an agent configuration
  */
 export function generateConfigHash(value: string): string {
-  // Using a simple but reliable hashing method that works for any string length
-  let hash = 0;
-  for (let i = 0; i < value.length; i++) {
-    const char = value.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  // Convert to positive hex string with fixed length
-  return Math.abs(hash).toString(16).padStart(8, '0');
+  return crypto.createHash('sha256').update(value, 'utf8').digest('hex');
 }
