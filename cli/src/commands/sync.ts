@@ -1,6 +1,5 @@
 import { loadConfig, loadLockFile, saveLockFile, generateConfigHash } from '../utils/config.js';
 import chalk from 'chalk';
-import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
@@ -32,10 +31,16 @@ if (!API_TOKEN) {
   process.exit(1);
 }
 
+interface LocaleChanges {
+  added: string[];
+  removed: string[];
+}
+
 interface FieldChanges {
   firstMessage?: boolean;
   systemPrompt?: boolean;
   llmProvider?: boolean;
+  locales?: LocaleChanges;
 }
 
 interface DetailedChanges {
@@ -93,6 +98,21 @@ export async function sync() {
         const fieldChanges: FieldChanges = {};
         let hasAnyChanges = false;
 
+        // Compare locales with detailed changes
+        const storedLocales = storedHashes.locales || [];
+        const currentLocales = convaiConfig.locales;
+        
+        const addedLocales = currentLocales.filter(locale => !storedLocales.includes(locale));
+        const removedLocales = storedLocales.filter(locale => !currentLocales.includes(locale));
+
+        if (addedLocales.length > 0 || removedLocales.length > 0) {
+          fieldChanges.locales = {
+            added: addedLocales,
+            removed: removedLocales
+          };
+          hasAnyChanges = true;
+        }
+
         if (generateConfigHash(agentConfig.firstMessage) !== storedHashes.firstMessage) {
           fieldChanges.firstMessage = true;
           hasAnyChanges = true;
@@ -118,14 +138,51 @@ export async function sync() {
       delete: agentsToDelete,
     };
 
-    console.log(chalk.blue('Determined the following changes:'));
-    console.log(JSON.stringify(changes, null, 2));
+    const hasChanges = changes.create.length > 0 || Object.keys(changes.update).length > 0 || changes.delete.length > 0;
+
+    if (hasChanges) {
+      console.log(chalk.blue('Determined the following changes:'));
+      
+      // Log agent creations
+      if (changes.create.length > 0) {
+        console.log(chalk.green(`Creating new agents: ${changes.create.join(', ')}`));
+      }
+
+      // Log agent updates
+      for (const [agent, agentChanges] of Object.entries(changes.update)) {
+        if (agentChanges.locales) {
+          const { added, removed } = agentChanges.locales;
+          if (added.length > 0) {
+            console.log(chalk.green(`  ${agent}: Adding locales: ${added.join(', ')}`));
+          }
+          if (removed.length > 0) {
+            console.log(chalk.yellow(`  ${agent}: Removing locales: ${removed.join(', ')}`));
+          }
+        }
+        if (agentChanges.firstMessage) {
+          console.log(chalk.yellow(`  ${agent}: First message content changed`));
+        }
+        if (agentChanges.systemPrompt) {
+          console.log(chalk.yellow(`  ${agent}: System prompt content changed`));
+        }
+        if (agentChanges.llmProvider) {
+          console.log(chalk.yellow(`  ${agent}: LLM provider changed`));
+        }
+      }
+
+      // Log agent deletions
+      if (changes.delete.length > 0) {
+        console.log(chalk.red(`Deleting agents: ${changes.delete.join(', ')}`));
+      }
+    } else {
+      console.log(chalk.green('No changes to make'));
+    }
 
     // Optionally, you can handle the creation, update, and deletion here using API calls
     // For example:
     // await handleAgentChanges(changes, apiClient);
 
-    // Update the lock file with current hashes for each field
+    // Update the lock file
     const updatedLock = { ...lockFile };
     for (const agent of agentsToCreate.concat(Object.keys(agentUpdates))) {
       const filePath = path.join(agentsDir, `${agent}.yaml`);
@@ -134,6 +191,7 @@ export async function sync() {
         firstMessage: generateConfigHash(agentConfig.firstMessage),
         systemPrompt: generateConfigHash(agentConfig.systemPrompt),
         llmProvider: agentConfig.llmProvider,
+        locales: [...convaiConfig.locales],
       };
     }
 
@@ -143,8 +201,14 @@ export async function sync() {
 
     // Save the updated lock file
     saveLockFile(updatedLock);
-    console.log(chalk.blue('Sync process completed.'));
+    console.log(chalk.green('Sync process completed.'));
   } catch (error) {
     console.error(chalk.red('An error occurred during sync:'), error);
   }
+}
+
+// Helper function to compare arrays
+function arraysAreEqual(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  return a.every((val, index) => val === b[index]);
 }

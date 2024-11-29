@@ -19,6 +19,7 @@ export interface LockFile {
       firstMessage: string;
       systemPrompt: string;
       llmProvider: LLMProvider;
+      locales: string[];
     };
   };
 }

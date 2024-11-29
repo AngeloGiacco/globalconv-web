@@ -1,15 +1,45 @@
 {
   "version": "1.0",
   "agents": {
-    "sales-agent": {
-      "firstMessage": "0000000003338b34",
-      "systemPrompt": "0000000007ddb1f8",
-      "llmProvider": "gpt-4o"
-    },
     "cs-agent": {
-      "firstMessage": "0000000003338b34",
-      "systemPrompt": "0000000007ddb1f8",
-      "llmProvider": "gpt-4o"
+      "firstMessage": "9061ccd8187a55ab766441cb70e8c496f83889da5e7c8d6fd5e3268aafc05a6f",
+      "systemPrompt": "3ce307abd0bab174e84b375703b3dce7d2aec9bb9891c7e21d2eddb5711d3d2d",
+      "llmProvider": "gpt-4o",
+      "locales": [
+        "en",
+        "de",
+        "it"
+      ]
+    },
+    "sales-agent": {
+      "firstMessage": "9fee4a4074eb8e40333e482531b3bd1e4ed43f556f6670413958bf04a34bdb49",
+      "systemPrompt": "a8981aaa8b1d28bd3de0d8a92093030f90b0c3777c938908babc4d13414aac87",
+      "llmProvider": "gpt-4o",
+      "locales": [
+        "en",
+        "de",
+        "it"
+      ]
+    },
+    "another copy": {
+      "firstMessage": "9061ccd8187a55ab766441cb70e8c496f83889da5e7c8d6fd5e3268aafc05a6f",
+      "systemPrompt": "3ce307abd0bab174e84b375703b3dce7d2aec9bb9891c7e21d2eddb5711d3d2d",
+      "llmProvider": "gpt-4o",
+      "locales": [
+        "en",
+        "de",
+        "it"
+      ]
+    },
+    "another": {
+      "firstMessage": "9061ccd8187a55ab766441cb70e8c496f83889da5e7c8d6fd5e3268aafc05a6f",
+      "systemPrompt": "3ce307abd0bab174e84b375703b3dce7d2aec9bb9891c7e21d2eddb5711d3d2d",
+      "llmProvider": "gpt-4o",
+      "locales": [
+        "en",
+        "de",
+        "it"
+      ]
     }
   }
 }
