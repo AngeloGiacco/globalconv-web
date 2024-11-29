@@ -81,10 +81,10 @@ export default function PricingPage() {
       <section className="container mx-auto px-6 pt-32 pb-24">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-blue-600 mb-6">
-            Talk to sales
+            Let's talk 
           </h1>
           <p className="text-lg text-gray-700 mb-12">
-            Connect with our sales team to explore how our solutions can benefit your business.
+            We're still trying to figure out pricing! let's find something that works for both of us!
           </p>
           
           {/* Calendar Section */}

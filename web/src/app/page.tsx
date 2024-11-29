@@ -8,7 +8,6 @@ import { Code2, Globe2 } from 'lucide-react';
 import WebDemo from '../components/WebDemo';
 import CliDemo from '../components/CliDemo';
 import AnalyticsDemo from '../components/AnalyticsDemo';
-import Link from 'next/link';
 import { IntlConvAI } from '../components/IntlConv';
 import Nav from '@/components/Nav'
 
