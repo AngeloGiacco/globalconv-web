@@ -1,4 +1,4 @@
-import { GB,
+import {
   FR,
   DE,
   US,
@@ -25,12 +25,24 @@ import { GB,
   HR,
   SA,
   PL,
+  PT,
+  TA,
+  VN
 } from 'country-flag-icons/react/3x2';
+import type { FlagComponent } from 'country-flag-icons/react/3x2'
 
-export const supportedLanguages = [
+// Add proper type definition
+export interface Language {
+  code: string
+  name: string
+  native_name: string
+  icon: FlagComponent
+  locale: string
+}
+
+export const supportedLanguages: Language[] = [
   // Existing Languages
-  { code: 'US', name: 'English', native_name: 'English (US)', icon: US, locale: 'en-US' },
-  { code: 'GB', name: 'English', native_name: 'English (UK)', icon: GB, locale: 'en' },
+  { code: 'US', name: 'English', native_name: 'English', icon: US, locale: 'en' },
   { code: 'FR', name: 'French', native_name: 'Français', icon: FR, locale: 'fr' },
   { code: 'DE', name: 'German', native_name: 'Deutsch', icon: DE, locale: 'de' },
   { code: 'IN', name: 'Hindi', native_name: 'हिन्दी', icon: IN, locale: 'hi' },
@@ -54,8 +66,9 @@ export const supportedLanguages = [
   { code: 'BG', name: 'Bulgarian', native_name: 'Български', icon: BG, locale: 'bg' },
   { code: 'MY', name: 'Malay', native_name: 'Bahasa Melayu', icon: MY, locale: 'ms' },
   { code: 'HR', name: 'Croatian', native_name: 'Hrvatski', icon: HR, locale: 'hr' },
-  { code: 'SA', name: 'Classic Arabic', native_name: 'العربية الفصحى', icon: SA, locale: 'ar' },
-  { code: 'TA', name: 'Tamil', native_name: 'தமிழ்', icon: IN, locale: 'ta' },
-  { code: 'PT', name: 'Portuguese', native_name: 'Português', icon: US, locale: 'pt' }, // Assuming using US flag for Portuguese
+  { code: 'SA', name: 'Arabic', native_name: 'العربية الفصحى', icon: SA, locale: 'ar' },
+  { code: 'TA', name: 'Tamil', native_name: 'தமிழ்', icon: TA, locale: 'ta' },
+  { code: 'PT', name: 'Portuguese', native_name: 'Português', icon: PT, locale: 'pt' },
   { code: 'PL', name: 'Polish', native_name: 'Polski', icon: PL, locale: 'pl' },
+  { code: 'VN', name: 'Vietnamese', native_name: 'Tiếng Việt', icon: VN, locale: 'vi' },
 ]; 

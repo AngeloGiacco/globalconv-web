@@ -4,23 +4,59 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { useAgents } from '@/hooks/useAgents'
 import { AgentDefinitions } from '@/components/Dashboard/AgentDefinitions'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { CreateAgentForm } from '@/components/Dashboard/CreateAgentForm'
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { supportedLanguages, Language } from '@/lib/supportedLanguages'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+export const VALID_LLM_PROVIDERS = [
+  'gpt-4o',
+  'gpt-4o-mini',
+  'gemini-1.5-flash',
+  'gemini-1.5-pro',
+  'gemini-1.0-pro',
+  'claude-3-5-sonnet',
+  'claude-3-haiku',
+  'gpt-3.5-turbo',
+  'gpt-4-turbo'
+] as const;
 
 export default function Dashboard() {
   const { data: agents, isLoading: loading, error } = useAgents()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [agentLanguages, setAgentLanguages] = useState<Language['locale'][]>([])
+  const [defaultLanguage, setDefaultLanguage] = useState<string>('')
 
   const handleCreateAgent = async (data: {
     name: string
-    defaultLocale: string
-    specLocale: string
+    defaultLanguage: string
+    specLanguage: string
+    llmProvider: string
     systemPrompt: string
     firstMessage: string
-    activeLocales: string[]
+    agentLanguages: string[]
   }) => {
-    // TODO: Implement agent creation
-    console.log('Creating agent:', data)
+    const validLanguages = agentLanguages.filter(locale => 
+      supportedLanguages.some(lang => lang.locale === locale)
+    )
+
+    if (validLanguages.length === 0) {
+      alert("Please select at least one valid language.")
+      return
+    }
+
+    const defaultLanguage = validLanguages[0]
+
+    console.log('Creating agent:', {
+      ...data,
+      defaultLanguage,
+      agentLanguages: validLanguages
+    })
     setCreateDialogOpen(false)
   }
 
@@ -108,9 +144,164 @@ export default function Dashboard() {
       </motion.div>
 
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogTitle className="sr-only">Create New Agent</DialogTitle>
-          <CreateAgentForm onSubmit={handleCreateAgent} />
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogTitle className="text-xl font-semibold mb-4" style={{ display: 'none' }}>Create New Agent</DialogTitle>
+          <DialogDescription>
+              Fill in the details below to create a new conversational agent.
+            </DialogDescription>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            const formData = new FormData(e.currentTarget)
+            handleCreateAgent({
+              name: formData.get('name') as string,
+              systemPrompt: formData.get('systemPrompt') as string,
+              llmProvider: formData.get('llmProvider') as string,
+              firstMessage: formData.get('firstMessage') as string,
+              defaultLanguage: defaultLanguage,
+              specLanguage: 'en',
+              agentLanguages: agentLanguages
+            })
+          }} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-sm font-medium text-gray-700">
+                Agent Name
+              </label>
+              <input
+                required
+                type="text"
+                id="name"
+                name="name"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Conversational Agent's Name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="systemPrompt" className="text-sm font-medium text-gray-700">
+                System Prompt
+              </label>
+              <textarea
+                required
+                id="systemPrompt"
+                name="systemPrompt"
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="You are a helpful AI assistant..."
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="firstMessage" className="text-sm font-medium text-gray-700">
+                First Message
+              </label>
+              <textarea
+                id="firstMessage"
+                name="firstMessage"
+                rows={2}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Hello! How can I assist you today?"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                LLM Provider
+              </label>
+              <Select 
+                required
+                name="llmProvider"
+                onValueChange={(value) => {
+                  const form = document.querySelector('form');
+                  if (form) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'llmProvider';
+                    input.value = value;
+                    form.appendChild(input);
+                  }
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a provider" />
+                </SelectTrigger>
+                <SelectContent>
+                  {VALID_LLM_PROVIDERS.map((provider) => (
+                    <SelectItem key={provider} value={provider}>
+                      {provider}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Default Language
+              </label>
+              <Select 
+                required
+                name="defaultLanguage"
+                value={defaultLanguage}
+                onValueChange={setDefaultLanguage}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a language" />
+                </SelectTrigger>
+                <SelectContent>
+                  {supportedLanguages.map((lang) => (
+                    <SelectItem key={lang.locale} value={lang.locale}>
+                      {lang.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Agent Languages
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {supportedLanguages.map((lang) => (
+                  <Button
+                    key={lang.locale}
+                    type="button"
+                    variant={agentLanguages.includes(lang.locale) ? "default" : "outline"}
+                    onClick={() => {
+                      setAgentLanguages(prev => 
+                        prev.includes(lang.locale)
+                          ? prev.filter(l => l !== lang.locale)
+                          : [...prev, lang.locale]
+                      )
+                    }}
+                    className={`
+                      ${agentLanguages.includes(lang.locale) 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-white text-gray-700'}
+                    `}
+                  >
+                    <span className="flex items-center">
+                      <lang.icon className="w-4 h-4 mr-2" />
+                      {lang.name}
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCreateDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">
+                Create Agent
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>

@@ -230,7 +230,7 @@ const LocalePerformanceCard = ({ locale, className }: LocalePerformanceCardProps
             {langInfo && <langInfo.icon className="w-4 h-4" />}
           </div>
           <h3 className="text-gray-100 font-medium">
-            {langInfo?.native_name || locale.locale}
+            {langInfo?.name || locale.locale}
           </h3>
         </div>
         <span className="text-2xl font-semibold text-emerald-400">

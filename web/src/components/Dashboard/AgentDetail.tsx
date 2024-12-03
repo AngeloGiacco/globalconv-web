@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react'
 import { useAgentLocales } from '@/hooks/useAgentLocales'
 import { Tables } from '@/types/database.types'
-import AgentInfoCard from '@/components/Dashboard/AgentInfoCard'
-import SystemPromptCard from '@/components/Dashboard/SystemPromptCard'
-import FirstMessageCard from '@/components/Dashboard/FirstMessageCard'
+import EditableCard from '@/components/Dashboard/EditableCard'
 import AnalyticsCard from '@/components/Dashboard/AnalyticsCard'
 import LocalesList from '@/components/Dashboard/LocalesList'
 import BackgroundGradients from '@/components/Dashboard/BackgroundGradients'
 import Header from '@/components/Dashboard/Header'
+import { motion } from 'framer-motion'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Agent = Tables<'agents'>
 
@@ -15,9 +15,23 @@ interface AgentDetailProps {
   agent: Agent
 }
 
+export const VALID_LLM_PROVIDERS = [
+  'gpt-4o',
+  'gpt-4o-mini',
+  'gemini-1.5-flash',
+  'gemini-1.5-pro',
+  'gemini-1.0-pro',
+  'claude-3-5-sonnet',
+  'claude-3-haiku',
+  'gpt-3.5-turbo',
+  'gpt-4-turbo'
+] as const;
+
 export function AgentDetail({ agent }: AgentDetailProps) {
   const { locales, loading, error } = useAgentLocales(agent.uuid)
   const [selectedLocale, setSelectedLocale] = useState<string>(agent.default_locale)
+  const [selectedProvider, setSelectedProvider] = useState(agent.llm_provider);
+  const [isProviderChanged, setIsProviderChanged] = useState(false);
 
   // Memoize localeData to prevent unnecessary recalculations
   const localeData = useMemo(() => {
@@ -29,27 +43,137 @@ export function AgentDetail({ agent }: AgentDetailProps) {
     )
   }, [locales, selectedLocale, agent.system_prompt, agent.first_message])
 
+  const updateLocaleData = (field: 'system_prompt' | 'first_message', newContent: string) => {
+    // Placeholder for updating locale data
+    console.log(`Update ${field} with:`, newContent)
+    // TODO: Implement actual update logic
+  }
+
+  const handleLLMProviderChange = (value: string) => {
+    setSelectedProvider(value);
+    setIsProviderChanged(true);
+  };
+
+  const handleSaveProvider = async (saveAcrossLocales: boolean) => {
+    try {
+      // TODO: Implement API call to save provider
+      console.log('Saving provider:', selectedProvider, 'across locales:', saveAcrossLocales);
+      setIsProviderChanged(false);
+    } catch (error) {
+      console.error('Failed to save provider:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FCFCFD] relative p-6">
       {/* Enhanced background gradients */}
       <BackgroundGradients />
 
       {/* Main content container */}
-      <div className="relative bg-white/70 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-full max-w-7xl mx-auto border border-gray-100/50">
-        {/* Header section */}
-        <Header agentName={agent.name} />
-
+      <div className="relative bg-white dark:bg-gray-900/70 backdrop-blur-xl shadow-2xl rounded-3xl p-10 w-full max-w-7xl mx-auto border border-gray-100/50 dark:border-gray-800/50">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left Section */}
           <div className="lg:w-2/3 space-y-8">
-            <AgentInfoCard agent={agent} loading={loading} />
-            <SystemPromptCard systemPrompt={localeData.system_prompt} />
-            <FirstMessageCard firstMessage={localeData.first_message} />
+            <EditableCard
+              title="System Prompt"
+              content={localeData.system_prompt}
+              onSaveForLocale={(newContent) => {
+                console.log('Save system prompt for current locale:', newContent)
+                // TODO: Implement API call to save system prompt for locale
+              }}
+              onSaveAcrossLocales={(newContent) => {
+                console.log('Save system prompt across all locales:', newContent)
+                // TODO: Implement API call to save system prompt across locales
+              }}
+            />
+            <EditableCard
+              title="First Message"
+              content={localeData.first_message}
+              onSaveForLocale={(newContent) => {
+                console.log('Save first message for current locale:', newContent)
+                // TODO: Implement API call to save first message for locale
+              }}
+              onSaveAcrossLocales={(newContent) => {
+                console.log('Save first message across all locales:', newContent)
+                // TODO: Implement API call to save first message across locales
+              }}
+            />
+            
+            {/* LLM Provider Section */}
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    LLM Provider
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Select the AI model that powers your agent
+                  </p>
+                </div>
+                {isProviderChanged && (
+                  <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                    <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                    Unsaved changes
+                  </div>
+                )}
+              </div>
+              
+              <div className="space-y-4">
+                <Select
+                  value={selectedProvider}
+                  onValueChange={handleLLMProviderChange}
+                >
+                  <SelectTrigger className="w-full bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+                    <SelectValue placeholder="Select a provider" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {VALID_LLM_PROVIDERS.map((provider) => (
+                        <SelectItem 
+                          key={provider} 
+                          value={provider}
+                          className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{provider}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </div>
+                  </SelectContent>
+                </Select>
+
+                {/* Save buttons - only show when changes are made */}
+                {isProviderChanged && (
+                  <div className="flex gap-3 justify-end mt-6 items-center">
+                    <button
+                      onClick={() => handleSaveProvider(false)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      Save for Current Locale
+                    </button>
+                    <button
+                      onClick={() => handleSaveProvider(true)}
+                      className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all"
+                    >
+                      Save Across All Locales
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <AnalyticsCard />
           </div>
 
           {/* Right Section - Locales */}
-          <div className="lg:w-1/3">
+          <motion.div
+            className="lg:w-1/3 space-y-4"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Header agentName={agent.name} />
             <LocalesList
               locales={locales}
               loading={loading}
@@ -58,9 +182,11 @@ export function AgentDetail({ agent }: AgentDetailProps) {
               setSelectedLocale={setSelectedLocale}
               defaultLocale={agent.default_locale}
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
   )
-} 
+}
+
+export default React.memo(AgentDetail) 
