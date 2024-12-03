@@ -5,10 +5,9 @@ import { createClient } from '@/supabase/client'
 
 type AgentLocale = Database['public']['Tables']['agent_locales']['Row']
 
-export function useAgentLocales(agentId: number | null) {
+export function useAgentLocales(agentId: string | null) {
   const [locales, setLocales] = useState<AgentLocale[]>([])
-  const [loading, setLoading] = useState(
-    false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
   const supabase = createClient()

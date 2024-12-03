@@ -1,5 +1,7 @@
 locales:
   - en
+  - fr 
+  - it
 default_locale: en
 specification_locale: en
 agents: ./convai-agents/

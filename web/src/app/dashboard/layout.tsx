@@ -2,6 +2,9 @@
 import { Home  } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from "next/navigation";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function DashboardLayout({
   children,
@@ -15,6 +18,7 @@ export default function DashboardLayout({
   ];
 
   return (
+    <QueryClientProvider client={queryClient}>
       <div className="flex h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-black dark:via-gray-900 dark:to-black">
         {/* Sidebar */}
         <aside className="w-64 bg-white/95 dark:bg-gray-900/95 border-r border-gray-200 dark:border-gray-800">
@@ -44,9 +48,10 @@ export default function DashboardLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 p-8">
+        <main className="flex-1 overflow-auto">
           {children}
         </main>
       </div>
+    </QueryClientProvider>
   );
 }
