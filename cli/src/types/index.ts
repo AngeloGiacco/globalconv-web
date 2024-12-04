@@ -10,6 +10,11 @@ export interface AgentConfig {
   firstMessage: string;
   systemPrompt: string;
   llmProvider: LLMProvider;
+  callToAction: string;
+  startCall: string;
+  endCall: string;
+  listening: string;
+  speaking: string;
 }
 
 export interface LockFile {
@@ -20,6 +25,11 @@ export interface LockFile {
       systemPrompt: string;
       llmProvider: LLMProvider;
       locales: string[];
+      callToAction?: string;
+      startCall?: string;
+      endCall?: string;
+      listening?: string;
+      speaking?: string;
     };
   };
 }
@@ -28,6 +38,11 @@ export interface AddOptions {
   firstMessage: string;
   systemPrompt: string;
   llmProvider: LLMProvider;
+  callToAction?: string;
+  startCall?: string;
+  endCall?: string;
+  listening?: string;
+  speaking?: string;
 }
 
 export const DEFAULT_CONFIG: ConvAIConfig = {

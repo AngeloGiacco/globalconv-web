@@ -14,6 +14,11 @@ interface AgentConfig {
   firstMessage: string;
   systemPrompt: string;
   llmProvider: LLMProvider;
+  callToAction?: string;
+  startCall?: string;
+  endCall?: string;
+  listening?: string;
+  speaking?: string;
 }
 
 interface ConvAIConfig {
@@ -41,6 +46,11 @@ interface FieldChanges {
   systemPrompt?: boolean;
   llmProvider?: boolean;
   locales?: LocaleChanges;
+  callToAction?: boolean;
+  startCall?: boolean;
+  endCall?: boolean;
+  listening?: boolean;
+  speaking?: boolean;
 }
 
 interface DetailedChanges {
@@ -97,6 +107,35 @@ export async function sync() {
       if (storedHashes) {
         const fieldChanges: FieldChanges = {};
         let hasAnyChanges = false;
+
+        // Add default values if not present
+        const currentCallToAction = agentConfig.callToAction || "Talk to us";
+        const currentStartCall = agentConfig.startCall || "Start call";
+        const currentEndCall = agentConfig.endCall || "End Call";
+        const currentListening = agentConfig.listening || "Listening...";
+        const currentSpeaking = agentConfig.speaking || "Speak to interrupt";
+
+        // Compare with defaults if needed
+        if (generateConfigHash(currentCallToAction) !== storedHashes.callToAction) {
+          fieldChanges.callToAction = true;
+          hasAnyChanges = true;
+        }
+        if (generateConfigHash(currentStartCall) !== storedHashes.startCall) {
+          fieldChanges.startCall = true;
+          hasAnyChanges = true;
+        }
+        if (generateConfigHash(currentEndCall) !== storedHashes.endCall) {
+          fieldChanges.endCall = true;
+          hasAnyChanges = true;
+        }
+        if (generateConfigHash(currentListening) !== storedHashes.listening) {
+          fieldChanges.listening = true;
+          hasAnyChanges = true;
+        }
+        if (generateConfigHash(currentSpeaking) !== storedHashes.speaking) {
+          fieldChanges.speaking = true;
+          hasAnyChanges = true;
+        }
 
         // Compare locales with detailed changes
         const storedLocales = storedHashes.locales || [];
@@ -168,6 +207,21 @@ export async function sync() {
         if (agentChanges.llmProvider) {
           console.log(chalk.yellow(`  ${agent}: LLM provider changed`));
         }
+        if (agentChanges.callToAction) {
+          console.log(chalk.yellow(`  ${agent}: Call to action content changed`));
+        }
+        if (agentChanges.startCall) {
+          console.log(chalk.yellow(`  ${agent}: Start call content changed`));
+        }
+        if (agentChanges.endCall) {
+          console.log(chalk.yellow(`  ${agent}: End call content changed`));
+        }
+        if (agentChanges.listening) {
+          console.log(chalk.yellow(`  ${agent}: Listening content changed`));
+        }
+        if (agentChanges.speaking) {
+          console.log(chalk.yellow(`  ${agent}: Speaking content changed`));
+        }
       }
 
       // Log agent deletions
@@ -192,6 +246,11 @@ export async function sync() {
         systemPrompt: generateConfigHash(agentConfig.systemPrompt),
         llmProvider: agentConfig.llmProvider,
         locales: [...convaiConfig.locales],
+        callToAction: generateConfigHash(agentConfig.callToAction || "Talk to us"),
+        startCall: generateConfigHash(agentConfig.startCall || "Start call"),
+        endCall: generateConfigHash(agentConfig.endCall || "End Call"),
+        listening: generateConfigHash(agentConfig.listening || "Listening..."),
+        speaking: generateConfigHash(agentConfig.speaking || "Speak to interrupt"),
       };
     }
 

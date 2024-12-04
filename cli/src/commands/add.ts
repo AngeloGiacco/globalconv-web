@@ -15,6 +15,11 @@ export const add = async (name: string, options: AddOptions) => {
     firstMessage: options.firstMessage || "Hey! How can I help?",
     systemPrompt: options.systemPrompt || "You're a helpful assistant.",
     llmProvider: options.llmProvider || "gemini-1.5-flash",
+    callToAction: options.callToAction || "Talk to us",
+    startCall: options.startCall || "Start call",
+    endCall: options.endCall || "End Call",
+    listening: options.listening || "Listening...",
+    speaking: options.speaking || "Speak to interrupt",
   };
 
   const { name: _, ...agentConfigWithoutName } = agentConfig;
