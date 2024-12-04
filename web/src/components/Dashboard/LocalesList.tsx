@@ -62,10 +62,10 @@ const LocalesList: React.FC<LocalesListProps> = ({
                 <SelectTrigger>
                   <SelectValue placeholder="Select a language" />
                 </SelectTrigger>
-                <SelectContent>
-                  {availableLocales.map(lang => (
+                <SelectContent className="max-h-80 overflow-y-auto">
+                  {availableLocales.sort((a, b) => a.name.localeCompare(b.name)).map(lang => (
                     <SelectItem key={lang.locale} value={lang.locale}>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <lang.icon className="w-4 h-4" />
                         <span>{lang.name}</span>
                       </div>

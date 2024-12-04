@@ -26,8 +26,8 @@ import {
   SA,
   PL,
   PT,
-  TA,
-  VN
+  VN,
+  HU
 } from 'country-flag-icons/react/3x2';
 import type { FlagComponent } from 'country-flag-icons/react/3x2'
 
@@ -67,8 +67,9 @@ export const supportedLanguages: Language[] = [
   { code: 'MY', name: 'Malay', native_name: 'Bahasa Melayu', icon: MY, locale: 'ms' },
   { code: 'HR', name: 'Croatian', native_name: 'Hrvatski', icon: HR, locale: 'hr' },
   { code: 'SA', name: 'Arabic', native_name: 'العربية الفصحى', icon: SA, locale: 'ar' },
-  { code: 'TA', name: 'Tamil', native_name: 'தமிழ்', icon: TA, locale: 'ta' },
+  { code: 'TA', name: 'Tamil', native_name: 'தமிழ்', icon: IN, locale: 'ta' },
   { code: 'PT', name: 'Portuguese', native_name: 'Português', icon: PT, locale: 'pt' },
   { code: 'PL', name: 'Polish', native_name: 'Polski', icon: PL, locale: 'pl' },
   { code: 'VN', name: 'Vietnamese', native_name: 'Tiếng Việt', icon: VN, locale: 'vi' },
+  { code: 'HU', name: 'Hungarian', native_name: 'Magyar', icon: HU, locale: 'hu' },
 ]; 
