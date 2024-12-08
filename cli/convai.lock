@@ -7,9 +7,14 @@
       "llmProvider": "gpt-4o",
       "locales": [
         "en",
-        "de",
+        "fr",
         "it"
-      ]
+      ],
+      "callToAction": "1d1d94fb539774e520cb772c3859fc00c9f63d48f4637e61f44ce54fc8a8fd44",
+      "startCall": "99e5d804a4e99361adf998f288c338371a550541544b8982203066421f89123f",
+      "endCall": "a7ee8300ef5170e7a40113e0b067c84067a9813185ee2ce9f3b6981e173c06b9",
+      "listening": "2d818145e12d4f9e3dac1166650a6927d2086fc53a46993ea4b32583a128f4ab",
+      "speaking": "095b648da4d586c0e7ab73cd9f1551fd7d5bb37ca3d8ec94c8c4ec58d9e0734a"
     },
     "sales-agent": {
       "firstMessage": "9fee4a4074eb8e40333e482531b3bd1e4ed43f556f6670413958bf04a34bdb49",
@@ -17,9 +22,14 @@
       "llmProvider": "gpt-4o",
       "locales": [
         "en",
-        "de",
+        "fr",
         "it"
-      ]
+      ],
+      "callToAction": "1d1d94fb539774e520cb772c3859fc00c9f63d48f4637e61f44ce54fc8a8fd44",
+      "startCall": "99e5d804a4e99361adf998f288c338371a550541544b8982203066421f89123f",
+      "endCall": "a7ee8300ef5170e7a40113e0b067c84067a9813185ee2ce9f3b6981e173c06b9",
+      "listening": "2efa9bd92658c88a679bf75343a38e8b526abb4d963e02cc89770eb9fcddf085",
+      "speaking": "095b648da4d586c0e7ab73cd9f1551fd7d5bb37ca3d8ec94c8c4ec58d9e0734a"
     },
     "another copy": {
       "firstMessage": "9061ccd8187a55ab766441cb70e8c496f83889da5e7c8d6fd5e3268aafc05a6f",
@@ -27,9 +37,14 @@
       "llmProvider": "gpt-4o",
       "locales": [
         "en",
-        "de",
+        "fr",
         "it"
-      ]
+      ],
+      "callToAction": "1d1d94fb539774e520cb772c3859fc00c9f63d48f4637e61f44ce54fc8a8fd44",
+      "startCall": "99e5d804a4e99361adf998f288c338371a550541544b8982203066421f89123f",
+      "endCall": "a7ee8300ef5170e7a40113e0b067c84067a9813185ee2ce9f3b6981e173c06b9",
+      "listening": "2efa9bd92658c88a679bf75343a38e8b526abb4d963e02cc89770eb9fcddf085",
+      "speaking": "095b648da4d586c0e7ab73cd9f1551fd7d5bb37ca3d8ec94c8c4ec58d9e0734a"
     },
     "another": {
       "firstMessage": "9061ccd8187a55ab766441cb70e8c496f83889da5e7c8d6fd5e3268aafc05a6f",
@@ -37,9 +52,14 @@
       "llmProvider": "gpt-4o",
       "locales": [
         "en",
-        "de",
+        "fr",
         "it"
-      ]
+      ],
+      "callToAction": "1d1d94fb539774e520cb772c3859fc00c9f63d48f4637e61f44ce54fc8a8fd44",
+      "startCall": "99e5d804a4e99361adf998f288c338371a550541544b8982203066421f89123f",
+      "endCall": "a7ee8300ef5170e7a40113e0b067c84067a9813185ee2ce9f3b6981e173c06b9",
+      "listening": "2efa9bd92658c88a679bf75343a38e8b526abb4d963e02cc89770eb9fcddf085",
+      "speaking": "095b648da4d586c0e7ab73cd9f1551fd7d5bb37ca3d8ec94c8c4ec58d9e0734a"
     }
   }
 }
